@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MYFIT — Il gestionale della tua palestra</title>
+<title>MyFit — Il gestionale completo per palestre e centri fitness</title>
 <meta name="description" content="Smetti di rincorrere pagamenti, scadenze e prenotazioni. MYFIT tiene insieme soci, incassi, corsi e allenamenti: gestionale web + app per i soci iOS e Android. Prenota una demo.">
 <meta name="theme-color" content="#0a0a0a">
 <link rel="icon" href="data:image/svg+xml,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'><rect%20width='32'%20height='32'%20rx='7'%20fill='%230a0a0a'/><text%20x='16'%20y='24'%20text-anchor='middle'%20font-family='Georgia,serif'%20font-size='22'%20font-style='italic'%20font-weight='700'%20fill='%23d4ff3a'>M</text></svg>">
 <meta property="og:type" content="website">
-<meta property="og:title" content="MYFIT — Il gestionale della tua palestra">
+<meta property="og:title" content="MyFit — Il gestionale completo per palestre e centri fitness">
 <meta property="og:description" content="Soci, incassi, corsi e allenamenti in un unico posto. Sai subito chi deve pagare, chi sta per scadere e chi è in sala. Prenota una demo.">
 <meta property="og:locale" content="it_IT">
 <meta name="twitter:card" content="summary_large_image">
@@ -384,7 +384,7 @@
   @media (max-width:720px){.app-row,.app-row.flip{flex-direction:column;gap:24px}.app-copy{max-width:340px}}
 
   /* ---- selettore a tab (gestionale + app): una feature alla volta ---- */
-  .ftabs{display:flex;flex-wrap:wrap;gap:8px;margin:clamp(30px,4.5vh,44px) 0 clamp(22px,3.2vh,32px)}
+  .ftabs{display:flex;flex-wrap:wrap;gap:8px;position:relative;margin:clamp(30px,4.5vh,44px) 0 clamp(22px,3.2vh,32px)}
   .ftab{font-family:var(--display);font-weight:600;font-size:13.5px;color:var(--text-2);background:var(--surface);border:1px solid var(--border-2);border-radius:11px;padding:9px 15px;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:.15s;-webkit-tap-highlight-color:transparent}
   .ftab .fn{font-family:var(--mono);font-size:10px;color:var(--faint)}
   .ftab:hover{color:var(--text);border-color:#444}
@@ -392,6 +392,12 @@
   .ftab.on .fn{color:rgba(10,10,10,.5)}
   .tab-hidden{display:none !important}
   #gestionale .feat,#app .app-row{margin-top:0}
+  /* carosello scorribile: pannelli in traccia orizzontale con scroll-snap */
+  .tabtrack{display:flex;position:relative;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;align-items:flex-start}
+  .tabtrack::-webkit-scrollbar{display:none}
+  .tabtrack > .feat,.tabtrack > .app-row{flex:0 0 100%;width:100%;min-width:0;scroll-snap-align:start;margin-top:0}
+  .tabtrack .tab-hidden{display:flex !important}   /* nel carosello sono tutti visibili, il tab sincronizza lo scroll */
+  @media (prefers-reduced-motion:reduce){.tabtrack{scroll-behavior:auto}}
   @media (max-width:640px){
     .ftabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:-16px;margin-right:-16px;padding:0 16px 4px}
     .ftabs::-webkit-scrollbar{display:none}
@@ -648,7 +654,7 @@
     </g>
   </svg>
   <div class="wrap">
-    <h1>Smetti di rincorrere pagamenti,<br>scadenze e <span class="acc">prenotazioni</span>.</h1>
+    <h1>Il gestionale completo per<br><span class="acc">palestre e centri fitness</span>.</h1>
     <p class="sub">MyFit tiene insieme soci, incassi, corsi e allenamenti. Apri il gestionale e vedi
        subito chi deve pagare, chi sta per scadere e chi è in sala — senza saltare tra Excel,
        quaderni e messaggi su WhatsApp.</p>
@@ -668,7 +674,7 @@
          Basta ricostruire la situazione da tre file diversi ogni volta che ti serve un numero.</p>
     </div>
 
-    <div class="ftabs" data-panels="#gestionale .feat">
+    <div class="ftabs" data-track="#gestionale .tabtrack">
       <button type="button" class="ftab on"><span class="fn">01</span>Dashboard</button>
       <button type="button" class="ftab"><span class="fn">02</span>Scheda socio</button>
       <button type="button" class="ftab"><span class="fn">03</span>Pagamenti</button>
@@ -678,6 +684,7 @@
       <button type="button" class="ftab"><span class="fn">07</span>Notifiche</button>
     </div>
 
+    <div class="tabtrack">
     <!-- Dashboard -->
     <div class="feat">
       <div class="mock-col">
@@ -1089,6 +1096,7 @@
         </ul>
       </div>
     </div>
+    </div><!-- /.tabtrack -->
   </div>
 </section>
 
@@ -1103,7 +1111,7 @@
          messaggio in meno a cui rispondere per te.</p>
     </div>
 
-    <div class="ftabs" data-panels="#app .app-row">
+    <div class="ftabs" data-track="#app .tabtrack">
       <button type="button" class="ftab on"><span class="fn">01</span>Home</button>
       <button type="button" class="ftab"><span class="fn">02</span>Workout</button>
       <button type="button" class="ftab"><span class="fn">03</span>Sessione</button>
@@ -1112,7 +1120,7 @@
       <button type="button" class="ftab"><span class="fn">06</span>Ingressi</button>
     </div>
 
-    <div class="app-rows">
+    <div class="app-rows tabtrack">
       <div class="app-row">
       <!-- HOME -->
       <div class="phone">
@@ -1546,15 +1554,28 @@
   window.addEventListener('load', fitMockups);
   window.addEventListener('resize', fitMockups);
 
-  // ---- selettore a tab: mostra una sola feature per volta ----
+  // ---- carosello scorribile con tab sincronizzati ----
   document.querySelectorAll('.ftabs').forEach(bar=>{
-    const panels = [...document.querySelectorAll(bar.dataset.panels)];
+    const track = document.querySelector(bar.dataset.track);
+    if(!track) return;
     const tabs = [...bar.querySelectorAll('.ftab')];
+    const panels = [...track.children];
+    // click sul tab -> scorri fino alla schermata corrispondente
     tabs.forEach((tab,i)=>tab.addEventListener('click',()=>{
-      tabs.forEach((t,j)=>t.classList.toggle('on', j===i));
-      panels.forEach((p,j)=>p.classList.toggle('tab-hidden', j!==i));
-      fitMockups();          // ridimensiona il mockup appena diventa visibile
+      track.scrollTo({left: panels[i].offsetLeft, behavior:'smooth'});
     }));
+    // scroll/swipe -> evidenzia il tab della schermata più vicina al centro
+    let raf;
+    const sync=()=>{
+      const center = track.scrollLeft + track.clientWidth/2;
+      let idx=0, best=Infinity;
+      panels.forEach((p,i)=>{ const c=p.offsetLeft + p.clientWidth/2, d=Math.abs(c-center); if(d<best){best=d;idx=i;} });
+      tabs.forEach((t,j)=>t.classList.toggle('on', j===idx));
+      // tieni il tab attivo visibile nella barra scorrevole (mobile)
+      const t=tabs[idx];
+      bar.scrollTo({left: t.offsetLeft - bar.clientWidth/2 + t.clientWidth/2, behavior:'smooth'});
+    };
+    track.addEventListener('scroll',()=>{ cancelAnimationFrame(raf); raf=requestAnimationFrame(sync); },{passive:true});
   });
 </script>
 
